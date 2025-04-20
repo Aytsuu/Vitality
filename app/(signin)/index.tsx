@@ -1,4 +1,4 @@
-import Login from "@/screens/auth"
+import Login from "@/screens/signin"
 
 export default () => {
     return <Login />

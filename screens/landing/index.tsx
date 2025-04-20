@@ -1,7 +1,6 @@
 import "@/global.css";
 import { router } from "expo-router";
 import { TouchableWithoutFeedback } from "react-native";
-
 import { View, Text, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
@@ -42,42 +41,44 @@ export default () => {
   },[]);
 
   return (
-    <SafeAreaView className="w-screen h-screen bg-primary p-5">
+    <SafeAreaView className="flex-1 bg-primary p-4 md:p-8">
+      {/* Animated Content Area */}
       <Animated.View 
-        className="flex-grow items-center gap-8 pt-24"
+        className="flex-1 items-center justify-center gap-6 md:gap-8 lg:gap-10 px-4"
         style={[fadeStyle1]}
       >
         <Image
           source={require("@/assets/images/LogoVitality.png")}
-          className="w-30 h-30"
+          className="w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48"
         />
-        <Text className="text-white-primary text-[30px]">
+        <Text className="text-white-primary text-3xl md:text-4xl lg:text-5xl text-center font-bold">
           Welcome to Vitality
         </Text>
-        <Text className="text-white-secondary text-center text-[18px] leading-relaxed">
+        <Text className="text-white-secondary text-center text-lg md:text-xl lg:text-2xl leading-relaxed max-w-2xl">
           The harmony of soothing sounds, stories and captivating visuals will
           guide you to a place of calm, clarity, and connection.
         </Text>
       </Animated.View>
+
+      {/* Animated Footer */}
       <Animated.View  
-        className="flex items-center justify-end gap-4 mb-16"
+        className="items-center justify-end pb-8 md:pb-12 lg:pb-16 gap-4 md:gap-6"
         style={[fadeStyle2]}
       >
-        <Animated.View 
-            style={[pulseAnimStyle]}
-          >
-            <Text className="text-white-primary">Tap into serenity.</Text>
-          </Animated.View>
+        <Animated.View style={[pulseAnimStyle]}>
+          <Text className="text-white-primary text-base md:text-lg lg:text-xl">
+            Tap into serenity.
+          </Text>
+        </Animated.View>
+        
         <TouchableWithoutFeedback onPress={() => router.push("/(signin)")}>
-          <View 
-            className="flex justify-center bg-purple-light w-[320px] h-[63px] rounded-full"
-          >
-            <Text className="text-white-primary text-center text-[18px]">
+          <View className="bg-purple-light w-full max-w-xs md:max-w-sm h-16 md:h-20 rounded-full justify-center">
+            <Text className="text-white-primary text-center text-lg md:text-xl lg:text-2xl font-semibold">
               Get Started
             </Text>
           </View>
         </TouchableWithoutFeedback>
-      </Animated.View >
+      </Animated.View>
     </SafeAreaView>
   );
 };

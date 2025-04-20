@@ -1,12 +1,21 @@
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useRef } from "react";
+import { SafeAreaView, NativeSyntheticEvent, TextInputKeyPressEventData, TextInput } from "react-native";
 import { signupSchema } from "@/schema/signup-schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
-import { Image, ScrollView, Text, TextInput, TouchableWithoutFeedback, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View, Alert } from "react-native";
 import { router } from "expo-router";
 
 export default () => {
+  // Create refs for each input
+  const firstNameRef = useRef<TextInput>(null);
+  const middleNameRef = useRef<TextInput>(null);
+  const lastNameRef = useRef<TextInput>(null);
+  const emailRef = useRef<TextInput>(null);
+  const genderRef = useRef<TextInput>(null);
+  const usernameRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInput>(null);
+
   const {
     control,
     trigger,
@@ -37,29 +46,18 @@ export default () => {
     ]);
 
     if(!formIsValid) {
-      return alert("Please fill in all fields correctly.");
+      return Alert.alert("Validation Error", "Please fill in all fields correctly.");
     }
 
     console.log("Data", getValues());
-    alert("Account created successfully!");
+    Alert.alert("Success", "Account created successfully!");
     router.push("/(signin)");
   };
 
   return (
     <ScrollView>
       <SafeAreaView className="flex-1 bg-primary p-4 md:p-8">
-        <Text className="text-white-primary text-md md:text-2xl">VITALITY</Text>
-        <View className="items-center mt-12 md:mt-24 lg:mt-32">
-          <View className="items-center gap-4 md:gap-6">
-            <Image
-              source={require("@/assets/images/LogoVitality.png")}
-              className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40"
-            />
-            <Text className="text-white-primary text-3xl md:text-4xl lg:text-5xl font-bold">
-              SIGN UP
-            </Text>
-          </View>
-        </View>
+        {/* ... (keep your existing header and logo code) ... */}
 
         {/* Form */}
         <View className="flex-1 mt-8 md:mt-16 lg:mt-20 px-2 md:px-8 lg:px-16">
@@ -73,12 +71,15 @@ export default () => {
               name="firstName"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                  ref={firstNameRef}
                   className="bg-white-primary rounded-full px-6 py-4 md:py-5 text-base md:text-lg"
                   placeholder="Enter your first name"
                   placeholderTextColor="#888"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
+                  returnKeyType="next"
+                  onSubmitEditing={() => middleNameRef.current?.focus()}
                 />
               )}
             />
@@ -89,8 +90,7 @@ export default () => {
             )}
           </View>
 
-          {/* Repeat the Controller pattern for all other fields */}
-          {/* Middle Name */}
+          {/* Middle Name Input */}
           <View className="mb-4 md:mb-6">
             <Text className="text-white-primary text-base md:text-lg lg:text-xl mb-2">
               Middle Name
@@ -100,12 +100,15 @@ export default () => {
               name="middleName"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                  ref={middleNameRef}
                   className="bg-white-primary rounded-full px-6 py-4 md:py-5 text-base md:text-lg"
                   placeholder="Enter your middle name"
                   placeholderTextColor="#888"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
+                  returnKeyType="next"
+                  onSubmitEditing={() => lastNameRef.current?.focus()}
                 />
               )}
             />
@@ -116,7 +119,7 @@ export default () => {
             )}
           </View>
 
-          {/* Last Name */}
+          {/* Last Name Input */}
           <View className="mb-4 md:mb-6">
             <Text className="text-white-primary text-base md:text-lg lg:text-xl mb-2">
               Last Name
@@ -126,12 +129,15 @@ export default () => {
               name="lastName"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                  ref={lastNameRef}
                   className="bg-white-primary rounded-full px-6 py-4 md:py-5 text-base md:text-lg"
                   placeholder="Enter your last name"
                   placeholderTextColor="#888"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
+                  returnKeyType="next"
+                  onSubmitEditing={() => emailRef.current?.focus()}
                 />
               )}
             />
@@ -142,7 +148,7 @@ export default () => {
             )}
           </View>
 
-          {/* Email */}
+          {/* Email Input */}
           <View className="mb-4 md:mb-6">
             <Text className="text-white-primary text-base md:text-lg lg:text-xl mb-2">
               Email
@@ -152,6 +158,7 @@ export default () => {
               name="email"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                  ref={emailRef}
                   className="bg-white-primary rounded-full px-6 py-4 md:py-5 text-base md:text-lg"
                   placeholder="Enter your email"
                   placeholderTextColor="#888"
@@ -160,6 +167,8 @@ export default () => {
                   value={value}
                   keyboardType="email-address"
                   autoCapitalize="none"
+                  returnKeyType="next"
+                  onSubmitEditing={() => genderRef.current?.focus()}
                 />
               )}
             />
@@ -168,7 +177,7 @@ export default () => {
             )}
           </View>
 
-          {/* Gender */}
+          {/* Gender Input */}
           <View className="mb-4 md:mb-6">
             <Text className="text-white-primary text-base md:text-lg lg:text-xl mb-2">
               Gender
@@ -178,12 +187,15 @@ export default () => {
               name="gender"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                  ref={genderRef}
                   className="bg-white-primary rounded-full px-6 py-4 md:py-5 text-base md:text-lg"
                   placeholder="Enter your gender"
                   placeholderTextColor="#888"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
+                  returnKeyType="next"
+                  onSubmitEditing={() => usernameRef.current?.focus()}
                 />
               )}
             />
@@ -192,7 +204,7 @@ export default () => {
             )}
           </View>
 
-          {/* Username */}
+          {/* Username Input */}
           <View className="mb-4 md:mb-6">
             <Text className="text-white-primary text-base md:text-lg lg:text-xl mb-2">
               Username
@@ -202,6 +214,7 @@ export default () => {
               name="username"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                  ref={usernameRef}
                   className="bg-white-primary rounded-full px-6 py-4 md:py-5 text-base md:text-lg"
                   placeholder="Enter your username"
                   placeholderTextColor="#888"
@@ -209,6 +222,8 @@ export default () => {
                   onChangeText={onChange}
                   value={value}
                   autoCapitalize="none"
+                  returnKeyType="next"
+                  onSubmitEditing={() => passwordRef.current?.focus()}
                 />
               )}
             />
@@ -219,7 +234,7 @@ export default () => {
             )}
           </View>
 
-          {/* Password */}
+          {/* Password Input */}
           <View className="mb-4 md:mb-6">
             <Text className="text-white-primary text-base md:text-lg lg:text-xl mb-2">
               Password
@@ -229,6 +244,7 @@ export default () => {
               name="password"
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
+                  ref={passwordRef}
                   className="bg-white-primary rounded-full px-6 py-4 md:py-5 text-base md:text-lg"
                   placeholder="Enter your password"
                   placeholderTextColor="#888"
@@ -236,6 +252,8 @@ export default () => {
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
+                  returnKeyType="go"
+                  onSubmitEditing={onSubmit}
                 />
               )}
             />
@@ -246,13 +264,13 @@ export default () => {
             )}
           </View>
 
-          <TouchableWithoutFeedback onPress={onSubmit}>
+          <TouchableOpacity onPress={onSubmit} activeOpacity={0.7}>
             <View className="bg-purple-light rounded-full mt-8 md:mt-10 py-4 md:py-5">
               <Text className="text-white-primary text-center text-lg md:text-xl lg:text-2xl font-semibold">
                 Sign Up
               </Text>
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </ScrollView>

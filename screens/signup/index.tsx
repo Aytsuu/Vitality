@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
-import { SafeAreaView, NativeSyntheticEvent, TextInputKeyPressEventData, TextInput } from "react-native";
+import { TextInput } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { signupSchema } from "@/schema/signup-schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
@@ -57,7 +58,22 @@ export default () => {
   return (
     <ScrollView>
       <SafeAreaView className="flex-1 bg-primary p-4 md:p-8">
-        {/* ... (keep your existing header and logo code) ... */}
+        {/* Header */}
+        <Text className="text-white-primary text-md md:text-2xl">VITALITY</Text>
+        
+        {/* Logo and Title */}
+        <View className="items-center mt-12 md:mt-24 lg:mt-32">
+          <View className="items-center gap-4 md:gap-6">
+            <Image
+              source={require("@/assets/images/LogoVitality.png")}
+              className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40"
+            />
+            <Text className="text-white-primary text-3xl md:text-4xl lg:text-5xl font-bold">
+              SIGN UP
+            </Text>
+          </View>
+        </View>
+        
 
         {/* Form */}
         <View className="flex-1 mt-8 md:mt-16 lg:mt-20 px-2 md:px-8 lg:px-16">

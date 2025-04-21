@@ -1,6 +1,6 @@
 import "@/global.css";
 import { router } from "expo-router";
-import { TouchableWithoutFeedback } from "react-native";
+import { TouchableWithoutFeedback, Alert } from "react-native";
 import { View, Text, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
@@ -9,7 +9,8 @@ import Animated, {
   withTiming,
   withRepeat,
 } from "react-native-reanimated";
-import React from "react";
+import React, { useEffect } from "react";
+import * as Location from 'expo-location';
 
 export default () => {
   const animation1 = useSharedValue(0);
@@ -34,11 +35,60 @@ export default () => {
     }
   }, [pulseAnim]);
 
-  React.useEffect(() => {
+  // Handle location permission and fetch
+  useEffect(() => {
+    const prepareLocation = async () => {
+      try {
+        // Request foreground location permission
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        
+        if (status !== 'granted') {
+          console.log('Location permission denied');
+          return;
+        }
+
+        // Get current position (optional - you might want to do this later)
+        const location = await Location.getCurrentPositionAsync({});
+        console.log('Location obtained:', location);
+        
+        // You could store this location in global state or context
+      } catch (error) {
+        console.error('Location error:', error);
+        Alert.alert(
+          'Location Error',
+          'We encountered an issue getting your location. Some features may be limited.'
+        );
+      }
+    };
+
+    // Start animations and location process
     animation1.value = withTiming(1, { duration: 1000 });
     animation2.value = withTiming(1, { duration: 2000 });
     pulseAnim.value = withRepeat(withTiming(.5, { duration: 1500 }), -1, true);
-  },[]);
+    
+    prepareLocation();
+  }, []);
+
+  const handleGetStarted = async () => {
+    // Optional: Check if we have location permissions before proceeding
+    const { status } = await Location.getForegroundPermissionsAsync();
+    
+    if (status !== 'granted') {
+      Alert.alert(
+        'Location Access',
+        'Vitality works best with location access to provide personalized content. You can enable this later in settings.',
+        [
+          { text: 'Continue Anyway', onPress: () => router.push("/(signin)") },
+          { text: 'Enable Location', onPress: async () => {
+            await Location.requestForegroundPermissionsAsync();
+            router.push("/(signin)");
+          }}
+        ]
+      );
+    } else {
+      router.push("/(signin)");
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-primary p-4 md:p-8">
@@ -71,7 +121,7 @@ export default () => {
           </Text>
         </Animated.View>
         
-        <TouchableWithoutFeedback onPress={() => router.push("/(signin)")}>
+        <TouchableWithoutFeedback onPress={handleGetStarted}>
           <View className="bg-purple-light w-full max-w-xs md:max-w-sm h-16 md:h-20 rounded-full justify-center">
             <Text className="text-white-primary text-center text-lg md:text-xl lg:text-2xl font-semibold">
               Get Started

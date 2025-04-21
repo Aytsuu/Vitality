@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default () => {
+export default React.memo(() => {
   const [username, setUsername] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
 
@@ -24,7 +24,7 @@ export default () => {
 
   const handleSignup = () => {
     router.push("/(signup)");
-  };
+  };  
 
   return (
     <SafeAreaView className="flex-1 bg-primary p-4 md:p-8">
@@ -98,4 +98,4 @@ export default () => {
       </View>
     </SafeAreaView>
   );
-};
+});

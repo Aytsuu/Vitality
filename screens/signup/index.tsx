@@ -20,7 +20,6 @@ export default () => {
   const {
     control,
     trigger,
-    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(signupSchema),
@@ -50,7 +49,6 @@ export default () => {
       return Alert.alert("Validation Error", "Please fill in all fields correctly.");
     }
 
-    console.log("Data", getValues());
     Alert.alert("Success", "Account created successfully!");
     router.push("/(signin)");
   };

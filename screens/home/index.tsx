@@ -51,7 +51,7 @@ export default () => {
               onChangeText={(text) => setB(+text)}
             />
             <Text><Equal color="#FFFF" /></Text>
-            <Multiply a={a} b={b} />
+            <MultiplyComponent a={a} b={b} />
           </View>
         </View>
       </SafeAreaView>
@@ -59,7 +59,7 @@ export default () => {
   );
 };
 
-export const Multiply = React.memo((props: { a: number; b: number }) => {
+export const MultiplyComponent = React.memo((props: { a: number; b: number }) => {
   const { a, b } = props;
   return <Text className="text-[36px] font-medium text-purple-800">{a * b}</Text>;
 });
